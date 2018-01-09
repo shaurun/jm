@@ -1,0 +1,23 @@
+group 'shaurun'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+project.ext.lwjglVersion = "2.9.2"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}"
+    compile "org.lwjgl.lwjgl:lwjgl:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-platform:3.0.0a:natives-windows"
+    compile group: 'org.slick2d', name: 'slick2d-core', version: '1.0.1'
+
+    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
+    //runtime files('src/main/resources/libraries')
+    //compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-linux"
+    //compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-osx"
+}
