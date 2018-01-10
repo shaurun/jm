@@ -95,9 +95,7 @@ public class Application {
 
     public static void restart() {
         Level level = game.getLevel();
-        for (GameObject go1 : Application.getGame().getGameObjects()) {
-            go1.kill();
-        }
+        game.killAll();
         game = null;
         game = new Game(level);
     }

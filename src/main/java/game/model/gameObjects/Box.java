@@ -3,6 +3,7 @@ package game.model.gameObjects;
 import game.Application;
 import game.engine.Physics;
 import game.model.*;
+import org.lwjgl.opengl.Display;
 
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class Box extends GameObject implements Solid, Movable {
     @Override
     public void update() {
         move(0, -SPEED*acceleration*2);
+        if (this.getX() < 0) {
+            this.setX(Display.getWidth()-SIZE);
+        }
+        if (this.getX() > Display.getWidth()) {
+            this.setX(0);
+        }
     }
 
     @Override

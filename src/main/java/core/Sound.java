@@ -4,13 +4,13 @@ import java.io.FileInputStream;
 import javazoom.jl.player.Player;
 
 public class Sound extends Thread {
-    private String file = "C:\\Users\\User\\IdeaProjects\\James\\src\\main\\resources\\audio\\background1.mp3";
+    private String file = "C:\\Users\\User\\IdeaProjects\\James\\src\\main\\resources\\audio\\background3.mp3";
     private volatile boolean play = false;
 
     public Sound() { }
 
     public void play() {
-        this.play = true;
+        //this.play = true;
         this.start();
     }
 

@@ -13,19 +13,17 @@ import java.util.List;
 public class Player extends GameObject {
 
     public static final int SIZE = 32;
-    private int SPEED = 3;
+    private int SPEED = 2;
     private int acceleration = 1;
-    private int JUMP_HEIGHT = 10;
-    private int JUMP_WIDTH = 60;
-    private float jumper=0;
     private long prevTime = System.currentTimeMillis();
     private GameObject jump;
-    private long jumpStarted = 0;
-    private long jumpFinished = System.currentTimeMillis();
-    private int maxJumpTime = 1000;
-    float gravity = 0.5f;           // How strong is gravity
-    int yVelocity = 0;
+
+
     private boolean isJumping = false;
+    private boolean jumpStarted = false;
+
+    float yVel = -10;
+    float gravity = 0.6f;
 
     public Player(int x, int y) {
         this.x = x;
@@ -33,39 +31,32 @@ public class Player extends GameObject {
         this.width = SIZE;
         this.height = SIZE;
         this.drawable = new TexturedSprite(SIZE, SIZE, "mant");
-        //this.drawable = new Sprite(SIZE, SIZE, 50, 50, 0);
     }
 
     @Override
     public void getInput() {
-        /*if (jumper > 180) {
-            jumper = 0;
-        }*/
         if (acceleration > 3) {
             acceleration = 3;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            //move(0, (int) (JUMP_HEIGHT*Math.sin(jumper)));
-            if( !isJumping /*&& jumper < 180*/)
-            {
-                isJumping= true;
-                jumpStarted = System.currentTimeMillis();
-            }
-            if (isJumping && System.currentTimeMillis()-jumpStarted <= maxJumpTime) {
-                if (System.currentTimeMillis() - jumpStarted < 1000) {
-                    move(0, (int) (SPEED * acceleration));
-                } else {
-                    move(0, (int)(SPEED*acceleration*-1));
-                }
-            } else {
-                isJumping = false;
-            }
-            jump = new HorizontalLine((int)this.getX(), (int)this.getY(), SIZE, 255, 255, 255);
-        } else {
-            isJumping = false;
-            jumper=0;
-            move(0, -SPEED*acceleration*2);
+
+        if (isTouchingGround()) {
+            isJumping =false;
         }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            if (isTouchingGround()) {
+                isJumping = true;
+                yVel = 10;
+            }
+            if (isJumping) {
+                yVel -= gravity;
+                jump = new HorizontalLine((int)this.getX(), (int)this.getY(), SIZE, 255, 255, 255);
+            }
+        } else {
+            yVel = -10;
+
+        }
+        move(0, (int) yVel);
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
             move(-SPEED*acceleration, 0);
         }
@@ -76,11 +67,14 @@ public class Player extends GameObject {
             acceleration++;
             prevTime = System.currentTimeMillis();
         }
-        if (System.currentTimeMillis() - jumpStarted > maxJumpTime) {
-            jumpStarted = 0;
-        }
 
-        if (!Physics.checkCollision(this, new Rectangle(0, 0, Display.getWidth(), Display.getHeight()))) {
+        if (this.getX() < 0) {
+            this.setX(Display.getWidth()-SIZE);
+        }
+        if (this.getX() > Display.getWidth()) {
+            this.setX(0);
+        }
+        if (this.getY() < 0 || this.getY() > Display.getHeight()) {
             Application.restart();
         }
     }
@@ -121,4 +115,15 @@ public class Player extends GameObject {
             }
 
     }
+
+    private boolean isTouchingGround() {
+        int y = (int) this.getY();
+        move(0, -1);
+        boolean result = y == (int) this.getY();
+        if (!result) {
+            move(0, 1);
+        }
+        return result;
+    }
+
 }
